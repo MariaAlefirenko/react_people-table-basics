@@ -49,7 +49,6 @@ export const PeoplePage: React.FC = () => {
   const hasPeople = !isLoading && !error && people.length > 0;
 
   return (
-    <main className="section">
       <div className="container">
         <h1 className="title">People Page</h1>
 
@@ -144,6 +143,5 @@ export const PeoplePage: React.FC = () => {
           </div>
         </div>
       </div>
-    </main>
   );
 };
