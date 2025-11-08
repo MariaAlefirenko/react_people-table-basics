@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Loader } from '../Loader';
 import { Person } from '../../types/Person';
 import { getPeople } from '../../api';
-import { PersonLink } from '../PersonLink';
+import { PeopleTable } from '../PeopleTable';
 
 export const PeoplePage: React.FC = () => {
-  const { slug } = useParams();
-
   const [people, setPeople] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,64 +67,8 @@ export const PeoplePage: React.FC = () => {
             <p data-cy="noPeopleMessage">There are no people on the server</p>
           )}
 
-          {hasPeople && (
-            <table
-              data-cy="peopleTable"
-              className="table is-striped is-hoverable is-narrow is-fullwidth"
-            >
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Sex</th>
-                  <th>Born</th>
-                  <th>Died</th>
-                  <th>Mother</th>
-                  <th>Father</th>
-                </tr>
-              </thead>
+          {hasPeople && <PeopleTable people={people} />}
 
-              <tbody>
-                {people.map(person => {
-                  const isSelected = person.slug === slug;
-
-                  const motherName = person.motherName?.trim();
-                  const fatherName = person.fatherName?.trim();
-
-                  const byName = new Map(people.map(p => [p.name, p]));
-                  const mother = motherName
-                    ? byName.get(motherName)
-                    : undefined;
-                  const father = fatherName
-                    ? byName.get(fatherName)
-                    : undefined;
-
-                  return (
-                    <tr
-                      key={person.slug}
-                      data-cy="person"
-                      className={isSelected ? 'has-background-warning' : ''}
-                    >
-                      <td>
-                        <PersonLink person={person} />
-                      </td>
-
-                      <td>{person.sex}</td>
-                      <td>{person.born}</td>
-                      <td>{person.died}</td>
-
-                      <td>
-                        <PersonLink person={mother} name={person.motherName} />
-                      </td>
-
-                      <td>
-                        <PersonLink person={father} name={person.fatherName} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
         </div>
       </div>
     </div>
