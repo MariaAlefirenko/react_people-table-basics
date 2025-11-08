@@ -49,99 +49,87 @@ export const PeoplePage: React.FC = () => {
   const hasPeople = !isLoading && !error && people.length > 0;
 
   return (
-      <div className="container">
-        <h1 className="title">People Page</h1>
+    <div className="container">
+      <h1 className="title">People Page</h1>
 
-        <div className="block">
-          <div className="box table-container">
-            {isLoading && (
-              <div data-cy="loader">
-                <Loader />
-              </div>
-            )}
+      <div className="block">
+        <div className="box table-container">
+          {isLoading && (
+            <div data-cy="loader">
+              <Loader />
+            </div>
+          )}
 
-            {error && (
-              <p data-cy="peopleLoadingError" className="has-text-danger">
-                {error}
-              </p>
-            )}
+          {error && (
+            <p data-cy="peopleLoadingError" className="has-text-danger">
+              {error}
+            </p>
+          )}
 
-            {noPeople && (
-              <p data-cy="noPeopleMessage">There are no people on the server</p>
-            )}
+          {noPeople && (
+            <p data-cy="noPeopleMessage">There are no people on the server</p>
+          )}
 
-            {hasPeople && (
-              <table
-                data-cy="peopleTable"
-                className="table is-striped is-hoverable is-narrow is-fullwidth"
-              >
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Sex</th>
-                    <th>Born</th>
-                    <th>Died</th>
-                    <th>Mother</th>
-                    <th>Father</th>
-                  </tr>
-                </thead>
+          {hasPeople && (
+            <table
+              data-cy="peopleTable"
+              className="table is-striped is-hoverable is-narrow is-fullwidth"
+            >
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Sex</th>
+                  <th>Born</th>
+                  <th>Died</th>
+                  <th>Mother</th>
+                  <th>Father</th>
+                </tr>
+              </thead>
 
-                <tbody>
-                  {people.map(person => {
-                    const isSelected = person.slug === slug;
+              <tbody>
+                {people.map(person => {
+                  const isSelected = person.slug === slug;
 
-                    const motherName = person.motherName?.trim();
-                    const fatherName = person.fatherName?.trim();
+                  const motherName = person.motherName?.trim();
+                  const fatherName = person.fatherName?.trim();
 
-                    const byName = new Map(people.map(p => [p.name, p]));
-                    const mother = motherName
-                      ? byName.get(motherName)
-                      : undefined;
-                    const father = fatherName
-                      ? byName.get(fatherName)
-                      : undefined;
+                  const byName = new Map(people.map(p => [p.name, p]));
+                  const mother = motherName
+                    ? byName.get(motherName)
+                    : undefined;
+                  const father = fatherName
+                    ? byName.get(fatherName)
+                    : undefined;
 
-                    return (
-                      <tr
-                        key={person.slug}
-                        data-cy="person"
-                        className={isSelected ? 'has-background-warning' : ''}
-                      >
-                        <td>
-                          <PersonLink person={person} />
-                        </td>
+                  return (
+                    <tr
+                      key={person.slug}
+                      data-cy="person"
+                      className={isSelected ? 'has-background-warning' : ''}
+                    >
+                      <td>
+                        <PersonLink person={person} />
+                      </td>
 
-                        <td>{person.sex}</td>
-                        <td>{person.born}</td>
-                        <td>{person.died}</td>
+                      <td>{person.sex}</td>
+                      <td>{person.born}</td>
+                      <td>{person.died}</td>
 
-                        <td>
-                          {!motherName ? (
-                            '-'
-                          ) : mother ? (
-                            <PersonLink person={mother} />
-                          ) : (
-                            motherName
-                          )}
-                        </td>
+                      <td>
+                        <PersonLink person={mother} name={person.motherName} />
+                      </td>
 
-                        <td>
-                          {!fatherName ? (
-                            '-'
-                          ) : father ? (
-                            <PersonLink person={father} />
-                          ) : (
-                            fatherName
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            )}
-          </div>
+                      <td>
+                        <PersonLink person={father} name={person.fatherName} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
+    </div>
   );
 };

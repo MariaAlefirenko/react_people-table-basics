@@ -1,49 +1,36 @@
-/* eslint-disable @typescript-eslint/indent */
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Person } from '../types/Person';
+import cn from 'classnames';
 
-type Props =
-  | {
-      person: Person;
-      personName?: never;
-      people?: never;
-    }
-  | {
-      personName: string | null;
-      people: Person[];
-      person?: never;
-    };
+interface PersonLinkProps {
+  person?: Person | null;
+  name?: string | null;
+}
 
-export const PersonLink: React.FC<Props> = props => {
+export const PersonLink: React.FC<PersonLinkProps> = ({ person, name }) => {
   const { slug } = useParams();
 
-  let foundPerson: Person | undefined;
-
-  if ('person' in props) {
-    foundPerson = props.person;
-  } else if (props.personName) {
-    foundPerson = props.people.find(p => p.name === props.personName);
+  if (!person && !name) {
+    return <>-</>;
   }
 
-  if (!foundPerson) {
-    return <span>{'personName' in props ? props.personName || '-' : '-'}</span>;
+  if (!person) {
+    return <>{name}</>;
   }
 
-  const isWoman = foundPerson.sex === 'f';
-  const isActive = foundPerson.slug === slug;
+  const isActive = person.slug === slug;
 
   return (
     <Link
-      to={`/people/${foundPerson.slug}`}
-      className={[
-        isWoman ? 'has-text-danger' : '',
-        isActive ? 'has-text-link' : '',
-      ]
-        .join(' ')
-        .trim()}
+      to={`/people/${person.slug}`}
+      className={cn({
+        'has-text-danger': person.sex === 'f',
+        'has-text-link': isActive,
+      })}
       data-cy="person-link"
     >
-      {foundPerson.name}
+      {name || person.name}
     </Link>
   );
 };
